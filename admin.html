@@ -163,6 +163,14 @@ legend{font-size:.71rem;letter-spacing:.09em;text-transform:uppercase;color:var(
 .meter i{display:block;height:100%;background:var(--forest);transition:width .2s}
 .meter.warn i{background:var(--ochre)}
 .meter.full i{background:var(--seal)}
+.card2{background:var(--paper-2);border:1px solid var(--line);border-radius:8px;padding:20px}
+.card2 + .card2{margin-top:20px}
+.card2 h3{margin-bottom:6px}
+.card2 p{font-size:.89rem;color:var(--ink-soft);margin:0 0 14px}
+.imgcard{display:grid;grid-template-columns:240px minmax(0,1fr);gap:26px;align-items:start}
+.imgcard > *{min-width:0}
+.portrait-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+.meta{font-size:.78rem;color:var(--ink-faint);margin:10px 0 0}
 
 /* ---------- modal + toast ---------- */
 .modal{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;background:rgba(12,33,28,.5)}
@@ -202,6 +210,11 @@ pre{background:var(--forest-2);color:#E7E6DE;padding:14px;border-radius:6px;over
   .rvtext{max-width:none}
   .editor{width:100%}
   .grid{grid-template-columns:1fr}
+  .imgcard{grid-template-columns:1fr;gap:18px}
+  .imgcard .bigshot{max-width:190px}
+  .card2{padding:16px}
+  .drop{padding:15px}
+  .drop .btn{display:block;width:100%;margin:9px 0 0}
 }
 </style>
 </head>
@@ -302,30 +315,30 @@ pre{background:var(--forest-2);color:#E7E6DE;padding:14px;border-radius:6px;over
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:240px 1fr;gap:26px;align-items:start;background:var(--paper-2);border:1px solid var(--line);border-radius:8px;padding:20px" id="imgGrid">
+    <div class="card2 imgcard" id="imgGrid">
       <div>
         <img class="bigshot" id="portraitImg" alt="Portrait used in the About section">
       </div>
       <div>
-        <h3 style="margin-bottom:6px">Ravi's photo</h3>
-        <p style="font-size:.89rem;color:var(--ink-soft);margin-bottom:14px">
-          Shows in the About section on the home page, next to the ten-years badge. A portrait crop works best — it is displayed at 4:5.
-        </p>
+        <h3>Ravi's photo</h3>
+        <p>Shows in the About section on the home page, next to the ten-years badge. A portrait crop works best — it is displayed at 4:5.</p>
         <div class="drop" id="portraitDrop">
           Drop a photo here, or
-          <button class="btn line sm" id="portraitPick" style="margin-left:4px">choose a file</button>
+          <button class="btn line sm" id="portraitPick">choose a file</button>
           <input type="file" id="portraitFile" accept="image/*" hidden>
         </div>
-        <p style="font-size:.78rem;color:var(--ink-faint);margin:10px 0 0" id="portraitMeta"></p>
-        <button class="btn danger sm" id="portraitClear" style="margin-top:10px" hidden>Remove photo</button>
+        <div class="portrait-actions">
+          <button class="btn danger sm" id="portraitClear" hidden>Remove photo</button>
+          <span class="meta" id="portraitMeta" style="margin:0"></span>
+        </div>
       </div>
     </div>
 
-    <div style="margin-top:22px;background:var(--paper-2);border:1px solid var(--line);border-radius:8px;padding:20px">
-      <h3 style="margin-bottom:6px">Storage used</h3>
-      <p style="font-size:.89rem;color:var(--ink-soft);margin-bottom:6px" id="quotaNote"></p>
+    <div class="card2">
+      <h3>Storage used</h3>
+      <p style="margin-bottom:6px" id="quotaNote"></p>
       <div class="meter" id="quotaMeter"><i style="width:0%"></i></div>
-      <p style="font-size:.78rem;color:var(--ink-faint);margin:0" id="quotaText"></p>
+      <p class="meta" style="margin:0" id="quotaText"></p>
     </div>
   </section>
 
