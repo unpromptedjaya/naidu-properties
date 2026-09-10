@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Naidu Properties — CMS</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#12211C; --ink-soft:#4E5C56; --ink-faint:#87938D;
+  --paper:#F1F0EA; --paper-2:#FAF9F5; --line:#D5D3C8;
+  --forest:#123C31; --forest-2:#0C2A22;
+  --lime:#C9D94B; --ochre:#C9832B; --seal:#A6382B;
+  --wrap:1160px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Instrument Sans",system-ui,sans-serif;font-size:16.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body.locked{overflow:hidden}
+h1,h2,h3,h4{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;letter-spacing:-0.03em;line-height:1.05;margin:0}
+:focus-visible{outline:2px solid var(--seal);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+[hidden]{display:none!important}
+
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:50;background:var(--forest);color:#F1F0EA}
+.bar{display:flex;align-items:center;gap:12px;height:62px}
+.mark{display:flex;align-items:center;gap:9px;text-decoration:none;color:inherit;white-space:nowrap}
+.seal{width:29px;height:29px;flex:none;border-radius:50%;background:var(--lime);color:var(--forest);display:grid;place-items:center;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:13px}
+.mark b{font-family:"Bricolage Grotesque",sans-serif;font-size:1rem;letter-spacing:-0.035em;line-height:1.05}
+.chip{font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;font-weight:600;border:1px solid rgba(241,240,234,.35);border-radius:20px;padding:3px 8px;color:rgba(241,240,234,.8)}
+.bar .right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.store-state{font-size:.76rem;color:rgba(241,240,234,.62);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.store-state i{width:7px;height:7px;border-radius:50%;background:var(--lime);display:block;flex:none}
+.navtabs{background:var(--forest-2);border-bottom:1px solid rgba(255,255,255,.08)}
+.navtabs .wrap{display:flex;gap:2px;overflow-x:auto}
+.navtabs button{font:inherit;font-size:.88rem;font-weight:500;background:none;border:0;border-bottom:2px solid transparent;color:rgba(241,240,234,.6);padding:12px 15px;cursor:pointer;white-space:nowrap}
+.navtabs button:hover{color:#F1F0EA}
+.navtabs button[aria-current="page"]{color:var(--lime);border-bottom-color:var(--lime);font-weight:600}
+.navtabs .n{font-size:.72rem;opacity:.65;margin-left:5px}
+
+/* ---------- buttons ---------- */
+.btn{font:inherit;font-size:.9rem;font-weight:600;border-radius:6px;padding:9px 15px;cursor:pointer;border:1px solid transparent;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.btn.primary{background:var(--lime);color:var(--forest)}
+.btn.primary:hover{background:#d7e65e}
+.btn.ghost{background:none;border-color:rgba(241,240,234,.4);color:#F1F0EA}
+.btn.ghost:hover{background:rgba(241,240,234,.12)}
+.btn.line{background:#fff;border-color:var(--line);color:var(--ink)}
+.btn.line:hover{border-color:var(--forest)}
+.btn.solid{background:var(--forest);color:#fff}
+.btn.solid:hover{background:var(--forest-2)}
+.btn.danger{background:none;border-color:rgba(166,56,43,.4);color:var(--seal)}
+.btn.danger:hover{background:rgba(166,56,43,.08)}
+.btn.sm{font-size:.83rem;padding:7px 11px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ---------- page furniture ---------- */
+main{padding:24px 0 90px}
+.head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.head h1{font-size:1.9rem}
+.head p{margin:4px 0 0;font-size:.88rem;color:var(--ink-soft)}
+.head .right{margin-left:auto;display:flex;gap:9px;flex-wrap:wrap}
+.toolbar{display:flex;gap:11px;align-items:center;flex-wrap:wrap;padding:13px;background:var(--paper-2);border:1px solid var(--line);border-radius:8px;margin-bottom:14px}
+.search{position:relative;flex:1 1 220px;min-width:0}
+.search input{width:100%;font:inherit;font-size:.92rem;padding:9px 12px 9px 34px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--ink)}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--ink-faint)}
+.tabs{display:flex;background:#fff;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.tabs button{font:inherit;font-size:.86rem;font-weight:500;background:none;border:0;padding:9px 14px;cursor:pointer;color:var(--ink-soft);border-right:1px solid var(--line);white-space:nowrap}
+.tabs button:last-child{border-right:0}
+.tabs button[aria-pressed="true"]{background:var(--forest);color:#F1F0EA;font-weight:600}
+.toolbar select{font:inherit;font-size:.89rem;padding:9px 10px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--ink)}
+.count{font-size:.85rem;color:var(--ink-soft);margin:0 0 12px}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:collapse;background:var(--paper-2);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+thead th{text-align:left;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;padding:11px 13px;border-bottom:1px solid var(--line);white-space:nowrap}
+tbody td{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:.91rem}
+tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background .13s}
+tbody tr:hover{background:#fff}
+tbody tr.is-hidden{opacity:.55}
+tbody tr.is-hidden .ttl{text-decoration:line-through;text-decoration-color:var(--ink-faint)}
+.id{font-size:.79rem;color:var(--ink-faint);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ttl{font-weight:600;display:block}
+.sub{font-size:.81rem;color:var(--ink-soft)}
+.money{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.money small{display:block;font-weight:400;font-size:.75rem;color:var(--ink-faint)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.77rem;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.pill.available,.pill.published{background:rgba(18,60,49,.09);color:var(--forest)}
+.pill.offer,.pill.pending{background:rgba(201,131,43,.14);color:var(--ochre)}
+.pill.rented,.pill.hidden{background:rgba(78,92,86,.14);color:var(--ink-soft)}
+.deal{font-size:.77rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint)}
+.rowacts{display:flex;gap:6px;justify-content:flex-end}
+.iconbtn{width:32px;height:32px;display:grid;place-items:center;border:1px solid var(--line);background:#fff;border-radius:5px;cursor:pointer;color:var(--ink-soft);padding:0;transition:border-color .13s,color .13s,background .13s}
+.iconbtn:hover{border-color:var(--forest);color:var(--forest)}
+.iconbtn.del:hover{border-color:var(--seal);color:var(--seal);background:rgba(166,56,43,.05)}
+.iconbtn[aria-pressed="true"]{background:var(--forest);border-color:var(--forest);color:var(--lime)}
+.iconbtn svg{width:15px;height:15px}
+.thumbcell{width:62px}
+.rowthumb{width:54px;height:40px;border-radius:4px;object-fit:cover;display:block;background:var(--forest);border:1px solid var(--line)}
+.empty{padding:50px 20px;text-align:center;color:var(--ink-soft);background:var(--paper-2);border:1px solid var(--line);border-radius:8px}
+.empty h3{margin-bottom:6px}
+.stars{color:var(--ochre);letter-spacing:1px;font-size:.9rem;white-space:nowrap}
+.rvtext{max-width:46ch;color:var(--ink-soft);font-size:.87rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tagset{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:.72rem;background:rgba(18,60,49,.07);color:var(--forest);border-radius:4px;padding:2px 7px;white-space:nowrap}
+
+/* ---------- slide-over ---------- */
+.scrim{position:fixed;inset:0;z-index:80;background:rgba(12,33,28,.55);opacity:0;pointer-events:none;transition:opacity .22s}
+.scrim.on{opacity:1;pointer-events:auto}
+.editor{position:fixed;top:0;right:0;bottom:0;width:min(580px,100%);z-index:85;background:var(--paper);
+  transform:translateX(100%);transition:transform .28s cubic-bezier(.32,.72,0,1);display:flex;flex-direction:column;box-shadow:-14px 0 40px rgba(12,33,28,.14)}
+.editor.on{transform:translateX(0)}
+.ehead{display:flex;align-items:center;gap:12px;padding:17px 22px;border-bottom:1px solid var(--line);background:var(--paper-2)}
+.ehead h2{font-size:1.2rem}
+.ehead .x{margin-left:auto}
+.ebody{overflow-y:auto;padding:20px 22px 26px;flex:1}
+.efoot{display:flex;gap:10px;align-items:center;padding:13px 22px;border-top:1px solid var(--line);background:var(--paper-2)}
+.efoot .spacer{margin-left:auto}
+fieldset{border:0;padding:0;margin:0 0 22px}
+legend{font-size:.71rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;padding:0 0 10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px 14px}
+.f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.f.full{grid-column:1/-1}
+.f label{font-size:.78rem;color:var(--ink-soft)}
+.f input,.f select,.f textarea{font:inherit;font-size:.92rem;padding:9px 10px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--ink);width:100%}
+.f textarea{min-height:110px;resize:vertical;line-height:1.5}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--forest)}
+.f .hint{font-size:.75rem;color:var(--ink-faint)}
+.f.bad input,.f.bad select,.f.bad textarea{border-color:var(--seal)}
+.f .err{font-size:.75rem;color:var(--seal)}
+.switch{display:flex;align-items:center;gap:11px;padding:11px 13px;background:var(--paper-2);border:1px solid var(--line);border-radius:6px}
+.switch input{width:auto;margin:0}
+.switch .t{font-size:.88rem;font-weight:600}
+.switch .s{font-size:.77rem;color:var(--ink-soft);display:block;font-weight:400}
+.checks{display:flex;flex-wrap:wrap;gap:8px}
+.checks label{display:flex;align-items:center;gap:7px;font-size:.86rem;background:#fff;border:1px solid var(--line);border-radius:20px;padding:6px 12px;cursor:pointer}
+.checks label:has(input:checked){background:var(--forest);color:#F1F0EA;border-color:var(--forest)}
+.checks input{width:auto;margin:0}
+.rate{display:flex;gap:4px}
+.rate button{font-size:1.4rem;line-height:1;background:none;border:0;cursor:pointer;color:var(--line);padding:0 2px}
+.rate button.on{color:var(--ochre)}
+
+/* ---------- photos ---------- */
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+.shot{position:relative;aspect-ratio:4/3;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:var(--paper-2)}
+.shot img{width:100%;height:100%;object-fit:cover;display:block}
+.shot .x{position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:5px;border:0;background:rgba(12,33,28,.72);color:#fff;cursor:pointer;display:grid;place-items:center;padding:0}
+.shot .x svg{width:12px;height:12px}
+.shot .mv{position:absolute;bottom:5px;left:5px;display:flex;gap:3px}
+.shot .mv button{width:22px;height:22px;border-radius:4px;border:0;background:rgba(12,33,28,.72);color:#fff;cursor:pointer;font-size:11px;line-height:1;padding:0}
+.shot.add{border-style:dashed;display:grid;place-items:center;cursor:pointer;color:var(--ink-faint);font-size:.8rem;text-align:center;gap:4px;padding:8px}
+.shot.add:hover{border-color:var(--forest);color:var(--forest)}
+.shot.add svg{width:20px;height:20px}
+.drop{border:1px dashed var(--line);border-radius:8px;padding:18px;text-align:center;color:var(--ink-soft);font-size:.87rem;background:var(--paper-2)}
+.drop.over{border-color:var(--forest);background:#fff}
+.bigshot{width:100%;max-width:240px;aspect-ratio:4/5;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block;background:var(--forest)}
+.meter{height:6px;background:var(--line);border-radius:4px;overflow:hidden;margin:8px 0 5px}
+.meter i{display:block;height:100%;background:var(--forest);transition:width .2s}
+.meter.warn i{background:var(--ochre)}
+.meter.full i{background:var(--seal)}
+
+/* ---------- modal + toast ---------- */
+.modal{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;background:rgba(12,33,28,.5)}
+.modal.on{opacity:1;pointer-events:auto}
+.modal .card{background:var(--paper);border-radius:12px;width:min(780px,100%);max-height:86vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(12,33,28,.3)}
+.modal .card .top{background:var(--paper-2);border-bottom:1px solid var(--line);border-radius:12px 12px 0 0;padding:17px 22px;display:flex;align-items:center;gap:12px}
+.modal .card .top h2{font-size:1.15rem}
+.modal .card .body{padding:20px 22px;overflow-y:auto}
+.modal .card .foot{padding:13px 22px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:center}
+pre{background:var(--forest-2);color:#E7E6DE;padding:14px;border-radius:6px;overflow:auto;max-height:300px;font-size:.76rem;line-height:1.5;margin:0}
+.steps{font-size:.88rem;color:var(--ink-soft);margin:0 0 14px;padding-left:18px}
+.steps li{margin-bottom:5px}
+.steps code{background:rgba(18,60,49,.08);padding:1px 5px;border-radius:3px;font-size:.85em}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,90px);z-index:95;background:var(--forest-2);color:#F1F0EA;padding:12px 16px;border-radius:8px;
+  display:flex;align-items:center;gap:14px;font-size:.89rem;box-shadow:0 10px 30px rgba(12,33,28,.3);transition:transform .25s,opacity .25s;opacity:0;max-width:calc(100vw - 32px)}
+.toast.on{transform:translate(-50%,0);opacity:1}
+.toast button{background:none;border:0;font:inherit;font-size:.87rem;font-weight:600;color:var(--lime);text-decoration:underline;cursor:pointer;padding:0;flex:none}
+
+@media(max-width:860px){
+  .wrap{padding:0 15px}
+  .bar .mark b{display:none}
+  .store-state span{display:none}
+  .head h1{font-size:1.55rem}
+  .head .right{width:100%;margin-left:0}
+  .head .right .btn{flex:1}
+  table{display:block;border:0;background:none}
+  thead{display:none}
+  tbody,tbody tr,tbody td{display:block}
+  tbody tr{background:var(--paper-2);border:1px solid var(--line);border-radius:8px;margin-bottom:10px;padding:12px 13px}
+  tbody td{border:0;padding:2px 0}
+  tbody td.c-act{padding-top:11px}
+  .rowacts{justify-content:flex-start}
+  .money{font-size:1rem}
+  .money small{display:inline;margin-left:6px}
+  .rowthumb{width:100%;height:120px;margin-bottom:8px}
+  .thumbcell{width:auto}
+  .rvtext{max-width:none}
+  .editor{width:100%}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="mark" href="./"><span class="seal" aria-hidden="true">N</span><b>Naidu Properties</b></a>
+    <span class="chip">CMS</span>
+    <div class="right">
+      <span class="store-state"><i></i><span id="storeLabel">Local storage</span></span>
+      <button class="btn ghost" id="publishBtn">Publish</button>
+    </div>
+  </div>
+</header>
+
+<nav class="navtabs">
+  <div class="wrap">
+    <button data-view="listings" aria-current="page">Listings <span class="n" id="nListings"></span></button>
+    <button data-view="reviews">Reviews <span class="n" id="nReviews"></span></button>
+    <button data-view="images">Site images</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ LISTINGS ============ -->
+  <section id="view-listings">
+    <div class="head">
+      <div>
+        <h1>Listings</h1>
+        <p id="summary"></p>
+      </div>
+      <div class="right">
+        <button class="btn line" id="resetBtn">Reset to sample data</button>
+        <button class="btn solid" id="newBtn">+ New property</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+        <input type="search" id="q" placeholder="Search title, locality, area or ID" aria-label="Search listings">
+      </div>
+      <div class="tabs" id="dealTabs" role="group" aria-label="Filter by section">
+        <button data-deal="all" aria-pressed="true">All</button>
+        <button data-deal="rent" aria-pressed="false">Rent</button>
+        <button data-deal="sale" aria-pressed="false">Buy</button>
+      </div>
+      <select id="statusF" aria-label="Filter by status">
+        <option value="all">Any status</option>
+        <option value="available">Available</option>
+        <option value="offer">Under offer</option>
+        <option value="rented">Rented / sold</option>
+        <option value="hidden">Hidden from site</option>
+      </select>
+    </div>
+
+    <p class="count" id="count"></p>
+    <div id="listWrap"></div>
+  </section>
+
+  <!-- ============ REVIEWS ============ -->
+  <section id="view-reviews" hidden>
+    <div class="head">
+      <div>
+        <h1>Reviews</h1>
+        <p id="rvSummary"></p>
+      </div>
+      <div class="right">
+        <button class="btn solid" id="newReview">+ Add review</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+        <input type="search" id="rvQ" placeholder="Search name or text" aria-label="Search reviews">
+      </div>
+      <div class="tabs" id="rvTabs" role="group" aria-label="Filter by state">
+        <button data-state="all" aria-pressed="true">All</button>
+        <button data-state="pending" aria-pressed="false">Waiting <span class="n" id="nPending"></span></button>
+        <button data-state="published" aria-pressed="false">Published</button>
+        <button data-state="hidden" aria-pressed="false">Hidden</button>
+      </div>
+    </div>
+
+    <p class="count" id="rvCount"></p>
+    <div id="rvWrap"></div>
+  </section>
+
+  <!-- ============ SITE IMAGES ============ -->
+  <section id="view-images" hidden>
+    <div class="head">
+      <div>
+        <h1>Site images</h1>
+        <p>Pictures that are not tied to one listing. Property photos live on each listing.</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:240px 1fr;gap:26px;align-items:start;background:var(--paper-2);border:1px solid var(--line);border-radius:8px;padding:20px" id="imgGrid">
+      <div>
+        <img class="bigshot" id="portraitImg" alt="Portrait used in the About section">
+      </div>
+      <div>
+        <h3 style="margin-bottom:6px">Ravi's photo</h3>
+        <p style="font-size:.89rem;color:var(--ink-soft);margin-bottom:14px">
+          Shows in the About section on the home page, next to the ten-years badge. A portrait crop works best — it is displayed at 4:5.
+        </p>
+        <div class="drop" id="portraitDrop">
+          Drop a photo here, or
+          <button class="btn line sm" id="portraitPick" style="margin-left:4px">choose a file</button>
+          <input type="file" id="portraitFile" accept="image/*" hidden>
+        </div>
+        <p style="font-size:.78rem;color:var(--ink-faint);margin:10px 0 0" id="portraitMeta"></p>
+        <button class="btn danger sm" id="portraitClear" style="margin-top:10px" hidden>Remove photo</button>
+      </div>
+    </div>
+
+    <div style="margin-top:22px;background:var(--paper-2);border:1px solid var(--line);border-radius:8px;padding:20px">
+      <h3 style="margin-bottom:6px">Storage used</h3>
+      <p style="font-size:.89rem;color:var(--ink-soft);margin-bottom:6px" id="quotaNote"></p>
+      <div class="meter" id="quotaMeter"><i style="width:0%"></i></div>
+      <p style="font-size:.78rem;color:var(--ink-faint);margin:0" id="quotaText"></p>
+    </div>
+  </section>
+
+</main>
+
+<div class="scrim" id="scrim"></div>
+
+<!-- ============ PROPERTY EDITOR ============ -->
+<aside class="editor" id="editor" aria-hidden="true" aria-label="Property editor">
+  <div class="ehead">
+    <div>
+      <h2 id="eTitle">New listing</h2>
+      <div class="id" id="eId"></div>
+    </div>
+    <button class="iconbtn x" id="eClose" aria-label="Close editor">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <form class="ebody" id="form" novalidate>
+    <fieldset>
+      <legend>Basics</legend>
+      <div class="grid">
+        <div class="f full"><label for="f-title">Title</label>
+          <input id="f-title" name="title" placeholder="3 BHK in a gated block"><div class="err" hidden></div></div>
+        <div class="f"><label for="f-deal">Section</label>
+          <select id="f-deal" name="deal"><option value="rent">Rent</option><option value="sale">Buy</option></select></div>
+        <div class="f"><label for="f-type">Property type</label>
+          <select id="f-type" name="type"></select></div>
+        <div class="f"><label for="f-config">Configuration</label>
+          <select id="f-config" name="config"></select></div>
+        <div class="f"><label for="f-art">Fallback drawing</label>
+          <select id="f-art" name="art"></select>
+          <span class="hint">Used when there are no photos</span></div>
+        <div class="f full">
+          <div class="switch">
+            <input type="checkbox" id="f-hidden">
+            <label for="f-hidden" style="cursor:pointer">
+              <span class="t">Hide from the site</span>
+              <span class="s">Stays here in the CMS, does not appear on the rent or buy page</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Photos</legend>
+      <div class="shots" id="shots"></div>
+      <p class="hint" style="font-size:.75rem;color:var(--ink-faint);margin:9px 0 0">
+        First photo is the one on the listing card. Drag not needed — use the arrows to reorder.
+      </p>
+      <input type="file" id="photoFile" accept="image/*" multiple hidden>
+    </fieldset>
+
+    <fieldset>
+      <legend>Where and how big</legend>
+      <div class="grid">
+        <div class="f"><label for="f-locality">Locality</label>
+          <input id="f-locality" name="locality" placeholder="HSR Layout" list="localities"><div class="err" hidden></div></div>
+        <div class="f"><label for="f-area">Area or block</label>
+          <input id="f-area" name="area" placeholder="Sector 2"></div>
+        <div class="f"><label for="f-sqft">Built-up area (sq ft)</label>
+          <input id="f-sqft" name="sqft" type="number" min="0" step="10" inputmode="numeric"><div class="err" hidden></div></div>
+        <div class="f"><label for="f-floor">Floor</label>
+          <input id="f-floor" name="floor" placeholder="4th of 8"></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Money</legend>
+      <div class="grid">
+        <div class="f"><label for="f-price"><span id="priceLabel">Monthly rent</span> (₹)</label>
+          <input id="f-price" name="price" type="number" min="0" step="500" inputmode="numeric"><div class="err" hidden></div></div>
+        <div class="f" id="depositField"><label for="f-deposit">Deposit (₹)</label>
+          <input id="f-deposit" name="deposit" type="number" min="0" step="5000" inputmode="numeric"></div>
+        <div class="f full"><span class="hint" id="priceHint"></span></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Details</legend>
+      <div class="grid">
+        <div class="f"><label for="f-furnish">Furnishing</label>
+          <select id="f-furnish" name="furnish"></select></div>
+        <div class="f"><label for="f-parking">Parking</label>
+          <input id="f-parking" name="parking" placeholder="1 covered" list="parkings"></div>
+        <div class="f sale-only"><label for="f-khata">Khata</label>
+          <select id="f-khata" name="khata"></select></div>
+        <div class="f sale-only"><label for="f-age">Age of property</label>
+          <input id="f-age" name="age" placeholder="6 years old"></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Availability</legend>
+      <div class="grid">
+        <div class="f"><label for="f-status">Status</label>
+          <select id="f-status" name="status">
+            <option value="available">Available</option>
+            <option value="offer">Under offer</option>
+            <option value="rented">Rented / sold</option>
+          </select></div>
+        <div class="f"><label for="f-availableFrom">Available from</label>
+          <input id="f-availableFrom" name="availableFrom" placeholder="Immediate" list="availabilities"></div>
+      </div>
+    </fieldset>
+
+    <datalist id="localities"></datalist>
+    <datalist id="parkings"></datalist>
+    <datalist id="availabilities"></datalist>
+  </form>
+  <div class="efoot">
+    <button class="btn danger" id="eDelete" type="button">Delete</button>
+    <span class="spacer"></span>
+    <button class="btn line" id="eCancel" type="button">Cancel</button>
+    <button class="btn solid" id="eSave" type="button">Save listing</button>
+  </div>
+</aside>
+
+<!-- ============ REVIEW EDITOR ============ -->
+<aside class="editor" id="rvEditor" aria-hidden="true" aria-label="Review editor">
+  <div class="ehead">
+    <div>
+      <h2 id="rvTitle">Add review</h2>
+      <div class="id" id="rvId"></div>
+    </div>
+    <button class="iconbtn x" id="rvClose" aria-label="Close editor">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <form class="ebody" id="rvForm" novalidate>
+    <fieldset>
+      <legend>The review</legend>
+      <div class="grid">
+        <div class="f full"><label>Rating</label>
+          <div class="rate" id="rvRate" role="group" aria-label="Star rating"></div></div>
+        <div class="f full"><label for="r-text">What they said</label>
+          <textarea id="r-text" placeholder="He showed us four flats in one evening…"></textarea><div class="err" hidden></div></div>
+        <div class="f"><label for="r-name">Name</label>
+          <input id="r-name" placeholder="Sridhar M."><div class="err" hidden></div></div>
+        <div class="f"><label for="r-detail">Who they are</label>
+          <input id="r-detail" placeholder="Owner, 3 BHK in Whitefield"></div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Show this review on</legend>
+      <div class="checks" id="rvTagset"></div>
+      <p class="hint" style="font-size:.75rem;color:var(--ink-faint);margin:9px 0 0">Pick the pages where it fits. Home shows a mixed selection.</p>
+    </fieldset>
+    <fieldset>
+      <legend>State</legend>
+      <div class="f">
+        <select id="r-status">
+          <option value="published">Published — visible on the site</option>
+          <option value="pending">Waiting — sent in, not shown yet</option>
+          <option value="hidden">Hidden — kept but not shown</option>
+        </select>
+      </div>
+    </fieldset>
+  </form>
+  <div class="efoot">
+    <button class="btn danger" id="rvDelete" type="button">Delete</button>
+    <span class="spacer"></span>
+    <button class="btn line" id="rvCancel" type="button">Cancel</button>
+    <button class="btn solid" id="rvSave" type="button">Save review</button>
+  </div>
+</aside>
+
+<!-- ============ PUBLISH ============ -->
+<div class="modal" id="publishModal" role="dialog" aria-modal="true" aria-labelledby="pubTitle">
+  <div class="card">
+    <div class="top"><h2 id="pubTitle">Publish to the site</h2>
+      <button class="iconbtn" id="pClose" style="margin-left:auto" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="body">
+      <div class="tabs" id="pubTabs" style="margin-bottom:14px">
+        <button data-pub="properties" aria-pressed="true">Listings</button>
+        <button data-pub="reviews" aria-pressed="false">Reviews</button>
+      </div>
+      <ol class="steps">
+        <li>Copy the block below.</li>
+        <li>In <code>index.html</code>, replace everything from <code id="pubMarker">const PROPERTIES = [</code> to its closing <code>];</code>.</li>
+        <li>Commit and push — the site rebuilds in about a minute.</li>
+      </ol>
+      <pre id="pubCode"></pre>
+    </div>
+    <div class="foot">
+      <button class="btn solid" id="pCopy">Copy block</button>
+      <button class="btn line" id="pJson">Download JSON</button>
+      <span style="margin-left:auto;font-size:.8rem;color:var(--ink-faint)" id="pCount"></span>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span><button id="toastAction" hidden></button></div>
+
+<script>
+/* =====================================================================
+   STORE — the only part that knows where data lives.
+   Connecting Supabase means implementing these same methods against the
+   `properties`, `reviews` and `site` tables and flipping DRIVER.
+   Nothing below this block touches storage directly. See SUPABASE.md.
+   ===================================================================== */
+const Store = (() => {
+  const DRIVER = "local";
+  const K = {properties:"np.cms.properties.v1", reviews:"np.cms.reviews.v1", site:"np.cms.site.v1"};
+
+  const read = (key, fallback) => {
+    try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; }
+    catch { return fallback; }
+  };
+  const write = (key, value) => {
+    try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+    catch(e){
+      if(e.name === "QuotaExceededError" || e.code === 22)
+        throw new Error("Browser storage is full. Remove a few photos, or connect Supabase to lift the limit.");
+      throw e;
+    }
+  };
+  const seed = async file => {
+    try { const r = await fetch(file, {cache:"no-store"}); if(r.ok) return await r.json(); }
+    catch { /* file:// — start empty */ }
+    return [];
+  };
+
+  const collection = (key, seedFile) => ({
+    async list(){
+      const cached = read(key, null);
+      if(cached) return cached;
+      const s = await seed(seedFile);
+      /* Only persist a seed that actually loaded — caching [] after a failed
+         fetch would leave the CMS permanently empty with no way back. */
+      if(s.length) write(key, s);
+      return s;
+    },
+    async save(item){
+      const all = await this.list();
+      const i = all.findIndex(x => x.id === item.id);
+      if(i > -1) all[i] = item; else all.unshift(item);
+      write(key, all);
+      return item;
+    },
+    async remove(id){
+      write(key, (await this.list()).filter(x => x.id !== id));
+    },
+    async replaceAll(list){ write(key, list); return list; },
+    async reset(){ localStorage.removeItem(key); return this.list(); }
+  });
+
+  const local = {
+    label: "Local storage",
+    properties: collection(K.properties, "properties.json"),
+    reviews: collection(K.reviews, "reviews.json"),
+    site: {
+      async get(){ return read(K.site, {}); },
+      async set(patch){
+        const next = {...read(K.site, {}), ...patch};
+        write(K.site, next);
+        return next;
+      }
+    },
+    usage(){
+      let bytes = 0;
+      for(const k of Object.values(K)) bytes += (localStorage.getItem(k) || "").length * 2;
+      return bytes;
+    }
+  };
+
+  /* Supabase driver — same shape, see SUPABASE.md:
+     properties: { list: () => sb.from("properties").select("*"), save: p => sb.from("properties").upsert(p), ... }
+     Photos move to Supabase Storage and the rows hold public URLs instead of data URLs. */
+  return DRIVER === "local" ? local : local;
+})();
+
+/* ---------- vocabularies ---------- */
+const TYPES   = ["Apartment","Villa","Plot","Commercial","Studio"];
+const CONFIGS = ["1 RK","1 BHK","2 BHK","3 BHK","4 BHK","5 BHK","Office","Shop","Site"];
+const ARTS    = {apartment:"Apartment block",villa:"Villa",plot:"Plot / site",office:"Office",studio:"Studio"};
+const FURNISH = ["Fully furnished","Semi furnished","Unfurnished","—"];
+const KHATA   = ["A-khata","B-khata","E-khata","—"];
+const STATUS  = {available:"Available", offer:"Under offer", rented:"Rented / sold"};
+const RV_TAGS = {home:"Home page", rent:"Rent", buy:"Buy", management:"Property management", services:"Paperwork"};
+const RV_STATE= {published:"Published", pending:"Waiting", hidden:"Hidden"};
+
+/* ---------- helpers ---------- */
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const inr = n => "₹" + Number(n||0).toLocaleString("en-IN");
+const big = n => n >= 10000000
+  ? "₹" + (n/10000000).toFixed(2).replace(/\.00$/,"") + " Cr"
+  : "₹" + (n/100000).toFixed(1).replace(/\.0$/,"") + " L";
+const priceOf = p => p.deal === "sale" ? big(p.price) : inr(p.price);
+const kb = b => b > 1048576 ? (b/1048576).toFixed(1) + " MB" : Math.round(b/1024) + " KB";
+
+function fill(sel, values, labels){
+  sel.innerHTML = (Array.isArray(values) ? values : Object.keys(values))
+    .map(v => `<option value="${esc(v)}">${esc(labels ? labels[v] : (Array.isArray(values) ? v : values[v]))}</option>`).join("");
+}
+
+/* Downscale in the browser so a 4MB phone photo does not fill storage. */
+function shrink(file, maxPx = 1400, quality = 0.75){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+      const c = Object.assign(document.createElement("canvas"),
+                              {width: Math.round(img.width*scale), height: Math.round(img.height*scale)});
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      resolve(c.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("That file is not an image the browser can read")); };
+    img.src = url;
+  });
+}
+
+let ALL = [], REVIEWS = [], SITE = {};
+let editing = null, editingPhotos = [], rvEditing = null, rvStars = 5, rvTags = [];
+let pubTab = "properties";
+
+/* ---------- section switching ---------- */
+function showView(name){
+  ["listings","reviews","images"].forEach(v => $("#view-"+v).hidden = v !== name);
+  $$(".navtabs button").forEach(b => b.setAttribute("aria-current", b.dataset.view === name ? "page" : "false"));
+  if(name === "images") refreshImages();
+}
+
+/* ---------- listings ---------- */
+const view = {q:"", deal:"all", status:"all"};
+
+function visible(){
+  const q = view.q.trim().toLowerCase();
+  return ALL.filter(p => {
+    if(view.deal !== "all" && p.deal !== view.deal) return false;
+    if(view.status === "hidden"){ if(!p.hidden) return false; }
+    else if(view.status !== "all" && p.status !== view.status) return false;
+    if(!q) return true;
+    return [p.id,p.title,p.locality,p.area,p.config].join(" ").toLowerCase().includes(q);
+  });
+}
+
+function render(){
+  const rows = visible();
+  const live = ALL.filter(p => !p.hidden);
+  const rent = live.filter(p => p.deal === "rent").length;
+  const sale = live.filter(p => p.deal === "sale").length;
+  const hid  = ALL.length - live.length;
+  $("#nListings").textContent = ALL.length;
+  $("#summary").textContent = `${rent} on the rent page · ${sale} on the buy page` + (hid ? ` · ${hid} hidden` : "");
+  $("#count").textContent = rows.length === ALL.length ? `Showing all ${rows.length}` : `Showing ${rows.length} of ${ALL.length}`;
+
+  if(!rows.length){
+    $("#listWrap").innerHTML = `<div class="empty">
+      <h3>${ALL.length ? "Nothing matches those filters" : "No listings yet"}</h3>
+      <p>${ALL.length ? "Try clearing the search or the status filter." : "Add your first property to get started."}</p></div>`;
+    return;
+  }
+
+  $("#listWrap").innerHTML = `<table>
+    <thead><tr><th></th><th>ID</th><th>Property</th><th>Section</th><th>Price</th><th>Status</th><th></th></tr></thead>
+    <tbody>${rows.map(p => `<tr data-id="${esc(p.id)}" class="${p.hidden ? "is-hidden" : ""}">
+      <td class="thumbcell">${p.photos && p.photos[0]
+        ? `<img class="rowthumb" src="${esc(p.photos[0])}" alt="">`
+        : `<span class="rowthumb" style="display:grid;place-items:center;color:rgba(201,217,75,.5)"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 16 5-5 4 4 3-3 6 6"/></svg></span>`}</td>
+      <td class="id">${esc(p.id)}</td>
+      <td><span class="ttl">${esc(p.title)}</span>
+          <span class="sub">${esc([p.config, p.area, p.locality].filter(Boolean).join(" · "))}</span></td>
+      <td><span class="deal">${p.deal === "sale" ? "Buy" : "Rent"}</span></td>
+      <td class="money">${priceOf(p)}${p.deal === "rent" ? "<small>per month</small>" : ""}</td>
+      <td>${p.hidden ? `<span class="pill hidden">Hidden</span>` : `<span class="pill ${esc(p.status)}">${esc(STATUS[p.status] || p.status)}</span>`}</td>
+      <td class="c-act"><div class="rowacts">
+        <button class="iconbtn" data-act="hide" aria-pressed="${p.hidden ? "true" : "false"}" aria-label="${p.hidden ? "Show on site" : "Hide from site"}" title="${p.hidden ? "Show on site" : "Hide from site"}">
+          ${p.hidden
+            ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l18 18M10.6 5.2A9 9 0 0 1 12 5c5 0 9 5 9 7a12 12 0 0 1-2.4 3M6.4 6.5A12.6 12.6 0 0 0 3 12c0 2 4 7 9 7a9 9 0 0 0 3.5-.7"/></svg>`
+            : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12s3.5-7 9-7 9 7 9 7-3.5 7-9 7-9-7-9-7Z"/><circle cx="12" cy="12" r="2.6"/></svg>`}
+        </button>
+        <button class="iconbtn" data-act="edit" aria-label="Edit ${esc(p.title)}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L20 8l-4-4L4 16z"/></svg></button>
+        <button class="iconbtn" data-act="dup" aria-label="Duplicate ${esc(p.title)}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
+        <button class="iconbtn del" data-act="del" aria-label="Delete ${esc(p.title)}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></button>
+      </div></td></tr>`).join("")}</tbody></table>`;
+}
+
+/* ---------- property editor ---------- */
+function nextId(deal){
+  const prefix = deal === "sale" ? 2 : 1;
+  const used = ALL.map(p => Number(String(p.id).replace(/\D/g,""))).filter(Boolean);
+  const inBand = used.filter(n => String(n)[0] === String(prefix));
+  return "NP-" + ((inBand.length ? Math.max(...inBand) : prefix * 1000) + 1);
+}
+
+function renderShots(){
+  $("#shots").innerHTML = editingPhotos.map((src,i) => `
+    <div class="shot">
+      <img src="${esc(src)}" alt="Photo ${i+1}">
+      <button type="button" class="x" data-rm="${i}" aria-label="Remove photo ${i+1}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <div class="mv">
+        ${i > 0 ? `<button type="button" data-mv="${i}" data-dir="-1" aria-label="Move earlier">←</button>` : ""}
+        ${i < editingPhotos.length-1 ? `<button type="button" data-mv="${i}" data-dir="1" aria-label="Move later">→</button>` : ""}
+      </div>
+    </div>`).join("") + `
+    <button type="button" class="shot add" id="addShot">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      Add photo
+    </button>`;
+}
+
+function openEditor(p){
+  editing = p && p.id ? {...p} : null;
+  const d = p || {deal:"rent", status:"available", art:"apartment", type:"Apartment", config:"2 BHK",
+                  furnish:"Semi furnished", availableFrom:"Immediate", parking:"—", khata:"A-khata"};
+  $("#eTitle").textContent = editing ? "Edit listing" : "New listing";
+  $("#eId").textContent = editing ? editing.id : "ID assigned on save";
+  $("#eDelete").hidden = !editing;
+
+  ["title","deal","type","config","art","locality","area","sqft","price","deposit",
+   "furnish","floor","parking","status","availableFrom","khata","age"].forEach(k => {
+    const el = $(`#f-${k}`); if(el) el.value = d[k] ?? "";
+  });
+  $("#f-hidden").checked = !!d.hidden;
+  editingPhotos = [...(d.photos || [])];
+  renderShots();
+
+  syncDealFields();
+  clearErrors();
+  openPanel("#editor");
+  setTimeout(() => $("#f-title").focus(), 260);
+}
+
+function openPanel(sel){
+  $("#scrim").classList.add("on");
+  $(sel).classList.add("on");
+  $(sel).setAttribute("aria-hidden","false");
+  document.body.classList.add("locked");
+}
+function closePanels(){
+  $("#scrim").classList.remove("on");
+  ["#editor","#rvEditor"].forEach(s => { $(s).classList.remove("on"); $(s).setAttribute("aria-hidden","true"); });
+  document.body.classList.remove("locked");
+  editing = null; rvEditing = null;
+}
+
+function syncDealFields(){
+  const sale = $("#f-deal").value === "sale";
+  $("#priceLabel").textContent = sale ? "Asking price" : "Monthly rent";
+  $("#depositField").hidden = sale;
+  $$(".sale-only").forEach(el => el.hidden = !sale);
+  const v = Number($("#f-price").value);
+  $("#priceHint").textContent = v ? `Shows on the site as ${sale ? big(v) : inr(v) + " per month"}` : "";
+}
+
+const clearErrors = () => {
+  $$(".f.bad").forEach(f => f.classList.remove("bad"));
+  $$(".f .err").forEach(e => { e.hidden = true; e.textContent = ""; });
+};
+function setError(id, msg){
+  const field = $(id).closest(".f");
+  field.classList.add("bad");
+  const err = field.querySelector(".err");
+  if(err){ err.textContent = msg; err.hidden = false; }
+}
+
+function readForm(){
+  const get = n => { const el = $(`#f-${n}`); return el ? String(el.value).trim() : ""; };
+  const deal = get("deal");
+  const p = {
+    id: editing ? editing.id : nextId(deal),
+    deal, title:get("title"), type:get("type"), config:get("config"),
+    locality:get("locality"), area:get("area"),
+    sqft:Number(get("sqft")) || 0, price:Number(get("price")) || 0,
+    furnish:get("furnish"), floor:get("floor"), parking:get("parking") || "—",
+    status:get("status"), availableFrom:get("availableFrom") || "Immediate", art:get("art")
+  };
+  if($("#f-hidden").checked) p.hidden = true;
+  if(editingPhotos.length) p.photos = [...editingPhotos];
+  if(deal === "rent") p.deposit = Number(get("deposit")) || 0;
+  else { p.khata = get("khata"); p.age = get("age"); }
+  return p;
+}
+
+function validate(p){
+  clearErrors();
+  const bad = [];
+  if(!p.title) bad.push(["#f-title","Give the listing a title"]);
+  if(!p.locality) bad.push(["#f-locality","Which locality?"]);
+  if(!p.price) bad.push(["#f-price", p.deal === "sale" ? "Asking price is needed" : "Monthly rent is needed"]);
+  if(!p.sqft) bad.push(["#f-sqft","Size is needed"]);
+  bad.forEach(([s,m]) => setError(s,m));
+  return !bad.length;
+}
+
+async function saveListing(){
+  const p = readForm();
+  if(!validate(p)){ toast("Check the highlighted fields"); return; }
+  const isNew = !editing;
+  try { await Store.properties.save(p); }
+  catch(e){ toast(e.message); return; }
+  ALL = await Store.properties.list();
+  render(); closePanels();
+  toast(isNew ? `Added ${p.id} — ${p.title}` : `Saved ${p.id}`);
+}
+
+async function toggleHidden(id){
+  const p = ALL.find(x => x.id === id); if(!p) return;
+  const next = {...p};
+  if(next.hidden) delete next.hidden; else next.hidden = true;
+  await Store.properties.save(next);
+  ALL = await Store.properties.list();
+  render();
+  toast(next.hidden ? `${p.id} hidden from the site` : `${p.id} is back on the site`);
+}
+
+async function deleteListing(id){
+  const p = ALL.find(x => x.id === id); if(!p) return;
+  await Store.properties.remove(id);
+  ALL = await Store.properties.list();
+  render(); closePanels();
+  toast(`Deleted ${p.id}`, "Undo", async () => {
+    await Store.properties.save(p);
+    ALL = await Store.properties.list();
+    render(); toast(`Restored ${p.id}`);
+  });
+}
+
+/* ---------- reviews ---------- */
+const rvView = {q:"", state:"all"};
+
+function rvVisible(){
+  const q = rvView.q.trim().toLowerCase();
+  return REVIEWS.filter(r => {
+    if(rvView.state !== "all" && r.status !== rvView.state) return false;
+    if(!q) return true;
+    return [r.name, r.detail, r.text].join(" ").toLowerCase().includes(q);
+  });
+}
+
+function renderReviews(){
+  const rows = rvVisible();
+  const pending = REVIEWS.filter(r => r.status === "pending").length;
+  const live = REVIEWS.filter(r => r.status === "published").length;
+  $("#nReviews").textContent = REVIEWS.length;
+  $("#nPending").textContent = pending || "";
+  $("#rvSummary").textContent = `${live} on the site` + (pending ? ` · ${pending} waiting for you` : "") ;
+  $("#rvCount").textContent = rows.length === REVIEWS.length ? `Showing all ${rows.length}` : `Showing ${rows.length} of ${REVIEWS.length}`;
+
+  if(!rows.length){
+    $("#rvWrap").innerHTML = `<div class="empty"><h3>${REVIEWS.length ? "Nothing matches" : "No reviews yet"}</h3>
+      <p>${REVIEWS.length ? "Try another filter." : "Add one yourself, or wait for someone to write one on the site."}</p></div>`;
+    return;
+  }
+
+  $("#rvWrap").innerHTML = `<table>
+    <thead><tr><th>Rating</th><th>Review</th><th>Shows on</th><th>State</th><th></th></tr></thead>
+    <tbody>${rows.map(r => `<tr data-id="${esc(r.id)}">
+      <td class="stars" aria-label="${r.stars} out of 5">${"★".repeat(r.stars)}${"☆".repeat(5-r.stars)}</td>
+      <td><span class="ttl">${esc(r.name)}</span>
+          <span class="sub">${esc(r.detail || "")}</span>
+          <div class="rvtext">${esc(r.text)}</div></td>
+      <td><div class="tagset">${(r.tag||[]).map(t => `<span class="tag">${esc(RV_TAGS[t] || t)}</span>`).join("")}</div></td>
+      <td><span class="pill ${esc(r.status)}">${esc(RV_STATE[r.status] || r.status)}</span></td>
+      <td class="c-act"><div class="rowacts">
+        ${r.status !== "published" ? `<button class="iconbtn" data-act="approve" aria-label="Publish" title="Publish">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 13 4 4L19 7"/></svg></button>` : ""}
+        ${r.status === "published" ? `<button class="iconbtn" data-act="unpublish" aria-label="Hide" title="Hide">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l18 18M10.6 5.2A9 9 0 0 1 12 5c5 0 9 5 9 7a12 12 0 0 1-2.4 3M6.4 6.5A12.6 12.6 0 0 0 3 12c0 2 4 7 9 7a9 9 0 0 0 3.5-.7"/></svg></button>` : ""}
+        <button class="iconbtn" data-act="edit" aria-label="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L20 8l-4-4L4 16z"/></svg></button>
+        <button class="iconbtn del" data-act="del" aria-label="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></button>
+      </div></td></tr>`).join("")}</tbody></table>`;
+}
+
+function renderStars(){
+  $("#rvRate").innerHTML = [1,2,3,4,5].map(n =>
+    `<button type="button" data-star="${n}" class="${n <= rvStars ? "on" : ""}" aria-label="${n} star${n>1?"s":""}">★</button>`).join("");
+}
+
+function openReview(r){
+  rvEditing = r && r.id ? {...r} : null;
+  rvStars = r ? r.stars : 5;
+  rvTags = r ? [...(r.tag || [])] : ["home"];
+  $("#rvTitle").textContent = rvEditing ? "Edit review" : "Add review";
+  $("#rvId").textContent = rvEditing ? rvEditing.id : "ID assigned on save";
+  $("#rvDelete").hidden = !rvEditing;
+  $("#r-text").value = r ? r.text : "";
+  $("#r-name").value = r ? r.name : "";
+  $("#r-detail").value = r ? (r.detail || "") : "";
+  $("#r-status").value = r ? r.status : "published";
+  renderStars();
+  $("#rvTagset").innerHTML = Object.entries(RV_TAGS).map(([k,v]) =>
+    `<label><input type="checkbox" value="${k}" ${rvTags.includes(k) ? "checked" : ""}>${esc(v)}</label>`).join("");
+  clearErrors();
+  openPanel("#rvEditor");
+  setTimeout(() => $("#r-text").focus(), 260);
+}
+
+async function saveReview(){
+  const text = $("#r-text").value.trim(), name = $("#r-name").value.trim();
+  clearErrors();
+  if(!text || !name){
+    if(!text) setError("#r-text","The review needs some words");
+    if(!name) setError("#r-name","Whose review is it?");
+    toast("Check the highlighted fields"); return;
+  }
+  const tags = [...$("#rvTagset").querySelectorAll("input:checked")].map(i => i.value);
+  const r = {
+    id: rvEditing ? rvEditing.id : "RV-" + (Math.max(100, ...REVIEWS.map(x => Number(String(x.id).replace(/\D/g,"")) || 100)) + 1),
+    status: $("#r-status").value, stars: rvStars, text, name,
+    detail: $("#r-detail").value.trim(), tag: tags.length ? tags : ["home"]
+  };
+  if(rvEditing && rvEditing.submittedAt) r.submittedAt = rvEditing.submittedAt;
+  const isNew = !rvEditing;
+  try { await Store.reviews.save(r); } catch(e){ toast(e.message); return; }
+  REVIEWS = await Store.reviews.list();
+  renderReviews(); closePanels();
+  toast(isNew ? `Added review from ${r.name}` : `Saved ${r.id}`);
+}
+
+async function setReviewStatus(id, status){
+  const r = REVIEWS.find(x => x.id === id); if(!r) return;
+  await Store.reviews.save({...r, status});
+  REVIEWS = await Store.reviews.list();
+  renderReviews();
+  toast(status === "published" ? `${r.name}'s review is live` : `${r.name}'s review is hidden`);
+}
+
+async function deleteReview(id){
+  const r = REVIEWS.find(x => x.id === id); if(!r) return;
+  await Store.reviews.remove(id);
+  REVIEWS = await Store.reviews.list();
+  renderReviews(); closePanels();
+  toast(`Deleted review from ${r.name}`, "Undo", async () => {
+    await Store.reviews.save(r);
+    REVIEWS = await Store.reviews.list();
+    renderReviews(); toast("Restored");
+  });
+}
+
+/* ---------- site images ---------- */
+function refreshImages(){
+  const src = SITE.portrait;
+  const img = $("#portraitImg");
+  img.src = src || "data:image/svg+xml;utf8," + encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 150" fill="none" stroke="rgba(201,217,75,.5)" stroke-width="3"><circle cx="60" cy="52" r="26"/><path d="M14 148c0-27 21-46 46-46s46 19 46 46"/></svg>`);
+  $("#portraitMeta").textContent = src ? `Custom photo · about ${kb(src.length * 2)}` : "No photo set — the site shows the outline drawing.";
+  $("#portraitClear").hidden = !src;
+
+  const used = Store.usage ? Store.usage() : 0;
+  const cap = 5 * 1024 * 1024;
+  const pct = Math.min(100, Math.round(used / cap * 100));
+  const meter = $("#quotaMeter");
+  meter.className = "meter" + (pct > 85 ? " full" : pct > 60 ? " warn" : "");
+  meter.firstElementChild.style.width = pct + "%";
+  $("#quotaText").textContent = `${kb(used)} of roughly 5 MB used (${pct}%)`;
+  $("#quotaNote").textContent = pct > 60
+    ? "Photos live in this browser for now, and the browser caps that at about 5 MB. Connecting Supabase moves them to real storage."
+    : "Photos are held in this browser while there is no backend. Connecting Supabase moves them to real storage with no practical limit.";
+}
+
+async function setPortrait(file){
+  try {
+    const dataUrl = await shrink(file, 1000, 0.8);
+    SITE = await Store.site.set({portrait: dataUrl});
+    refreshImages();
+    toast("Photo updated");
+  } catch(e){ toast(e.message); }
+}
+
+/* ---------- toast ---------- */
+let toastTimer;
+function toast(msg, actionLabel, onAction){
+  clearTimeout(toastTimer);
+  $("#toastMsg").textContent = msg;
+  const btn = $("#toastAction");
+  btn.hidden = !actionLabel;
+  if(actionLabel){ btn.textContent = actionLabel; btn.onclick = () => { hideToast(); onAction && onAction(); }; }
+  $("#toast").classList.add("on");
+  toastTimer = setTimeout(hideToast, actionLabel ? 7000 : 3200);
+}
+const hideToast = () => $("#toast").classList.remove("on");
+
+/* ---------- publish ---------- */
+function propertiesBlock(){
+  const order = ["id","deal","title","type","config","locality","area","sqft","price","deposit",
+                 "furnish","floor","parking","status","availableFrom","khata","age","art","photos"];
+  const line = p => "  { " + order.filter(k => p[k] !== undefined && p[k] !== "")
+    .map(k => `${k}:${typeof p[k] === "number" ? p[k] : JSON.stringify(p[k])}`).join(", ") + " }";
+  const live = ALL.filter(p => !p.hidden);
+  const rent = live.filter(p => p.deal === "rent").map(line).join(",\n");
+  const sale = live.filter(p => p.deal === "sale").map(line).join(",\n");
+  return `const PROPERTIES = [\n  // ---- RENT ----\n${rent},\n\n  // ---- SALE ----\n${sale}\n];`;
+}
+
+function reviewsBlock(){
+  const live = REVIEWS.filter(r => r.status === "published");
+  return "const REVIEWS = [\n" + live.map(r =>
+    `  { stars:${r.stars}, tag:${JSON.stringify(r.tag)}, text:${JSON.stringify(r.text)},\n    name:${JSON.stringify(r.name)}, detail:${JSON.stringify(r.detail || "")} }`
+  ).join(",\n") + "\n];";
+}
+
+function renderPublish(){
+  const isProps = pubTab === "properties";
+  $("#pubCode").textContent = isProps ? propertiesBlock() : reviewsBlock();
+  $("#pubMarker").textContent = isProps ? "const PROPERTIES = [" : "const REVIEWS = [";
+  $("#pCount").textContent = isProps
+    ? `${ALL.filter(p => !p.hidden).length} listings published, ${ALL.filter(p => p.hidden).length} hidden`
+    : `${REVIEWS.filter(r => r.status === "published").length} reviews published`;
+}
+function openPublish(){ renderPublish(); $("#publishModal").classList.add("on"); document.body.classList.add("locked"); }
+function closePublish(){ $("#publishModal").classList.remove("on"); document.body.classList.remove("locked"); }
+
+/* ---------- wiring ---------- */
+fill($("#f-type"), TYPES); fill($("#f-config"), CONFIGS); fill($("#f-art"), ARTS);
+fill($("#f-furnish"), FURNISH); fill($("#f-khata"), KHATA);
+
+$(".navtabs").addEventListener("click", e => {
+  const b = e.target.closest("button[data-view]"); if(b) showView(b.dataset.view);
+});
+
+$("#q").addEventListener("input", e => { view.q = e.target.value; render(); });
+$("#statusF").addEventListener("change", e => { view.status = e.target.value; render(); });
+$("#dealTabs").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  view.deal = b.dataset.deal;
+  $$("#dealTabs button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  render();
+});
+
+$("#listWrap").addEventListener("click", e => {
+  const row = e.target.closest("tr[data-id]"); if(!row) return;
+  const p = ALL.find(x => x.id === row.dataset.id); if(!p) return;
+  const btn = e.target.closest("[data-act]");
+  const act = btn ? btn.dataset.act : "edit";
+  if(act === "edit") openEditor(p);
+  if(act === "hide") toggleHidden(p.id);
+  if(act === "dup")  openEditor({...p, id:null, title:p.title + " (copy)"});
+  if(act === "del" && confirm(`Delete ${p.id} — ${p.title}?`)) deleteListing(p.id);
+});
+
+$("#newBtn").addEventListener("click", () => openEditor(null));
+$("#eClose").addEventListener("click", closePanels);
+$("#eCancel").addEventListener("click", closePanels);
+$("#scrim").addEventListener("click", closePanels);
+$("#eSave").addEventListener("click", saveListing);
+$("#eDelete").addEventListener("click", () => {
+  if(editing && confirm(`Delete ${editing.id} — ${editing.title}?`)) deleteListing(editing.id);
+});
+$("#f-deal").addEventListener("change", syncDealFields);
+$("#f-price").addEventListener("input", syncDealFields);
+$("#form").addEventListener("submit", e => { e.preventDefault(); saveListing(); });
+$("#form").addEventListener("keydown", e => {
+  if((e.metaKey || e.ctrlKey) && e.key === "Enter"){ e.preventDefault(); saveListing(); }
+});
+
+$("#shots").addEventListener("click", e => {
+  const add = e.target.closest("#addShot");
+  if(add){ $("#photoFile").click(); return; }
+  const rm = e.target.closest("[data-rm]");
+  if(rm){ editingPhotos.splice(Number(rm.dataset.rm), 1); renderShots(); return; }
+  const mv = e.target.closest("[data-mv]");
+  if(mv){
+    const i = Number(mv.dataset.mv), j = i + Number(mv.dataset.dir);
+    [editingPhotos[i], editingPhotos[j]] = [editingPhotos[j], editingPhotos[i]];
+    renderShots();
+  }
+});
+$("#photoFile").addEventListener("change", async e => {
+  const files = [...e.target.files];
+  e.target.value = "";
+  for(const f of files){
+    try { editingPhotos.push(await shrink(f)); }
+    catch(err){ toast(err.message); }
+  }
+  renderShots();
+  if(files.length) toast(`${files.length} photo${files.length>1?"s":""} added — save the listing to keep them`);
+});
+
+$("#newReview").addEventListener("click", () => openReview(null));
+$("#rvQ").addEventListener("input", e => { rvView.q = e.target.value; renderReviews(); });
+$("#rvTabs").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  rvView.state = b.dataset.state;
+  $$("#rvTabs button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  renderReviews();
+});
+$("#rvWrap").addEventListener("click", e => {
+  const row = e.target.closest("tr[data-id]"); if(!row) return;
+  const r = REVIEWS.find(x => x.id === row.dataset.id); if(!r) return;
+  const btn = e.target.closest("[data-act]");
+  const act = btn ? btn.dataset.act : "edit";
+  if(act === "edit") openReview(r);
+  if(act === "approve") setReviewStatus(r.id, "published");
+  if(act === "unpublish") setReviewStatus(r.id, "hidden");
+  if(act === "del" && confirm(`Delete the review from ${r.name}?`)) deleteReview(r.id);
+});
+$("#rvRate").addEventListener("click", e => {
+  const b = e.target.closest("[data-star]"); if(!b) return;
+  rvStars = Number(b.dataset.star); renderStars();
+});
+$("#rvClose").addEventListener("click", closePanels);
+$("#rvCancel").addEventListener("click", closePanels);
+$("#rvSave").addEventListener("click", saveReview);
+$("#rvDelete").addEventListener("click", () => {
+  if(rvEditing && confirm(`Delete the review from ${rvEditing.name}?`)) deleteReview(rvEditing.id);
+});
+
+$("#portraitPick").addEventListener("click", () => $("#portraitFile").click());
+$("#portraitFile").addEventListener("change", e => { if(e.target.files[0]) setPortrait(e.target.files[0]); e.target.value = ""; });
+const drop = $("#portraitDrop");
+["dragenter","dragover"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave","drop"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if(f) setPortrait(f); });
+$("#portraitClear").addEventListener("click", async () => {
+  SITE = await Store.site.set({portrait: null});
+  refreshImages(); toast("Photo removed");
+});
+
+$("#publishBtn").addEventListener("click", openPublish);
+$("#pClose").addEventListener("click", closePublish);
+$("#publishModal").addEventListener("click", e => { if(e.target === $("#publishModal")) closePublish(); });
+$("#pubTabs").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  pubTab = b.dataset.pub;
+  $$("#pubTabs button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  renderPublish();
+});
+$("#pCopy").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText($("#pubCode").textContent); toast("Block copied"); }
+  catch { toast("Copy failed — select the text and copy manually"); }
+});
+$("#pJson").addEventListener("click", () => {
+  const data = pubTab === "properties" ? ALL : REVIEWS;
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+  const a = Object.assign(document.createElement("a"),
+    {href:URL.createObjectURL(blob), download: pubTab === "properties" ? "properties.json" : "reviews.json"});
+  a.click(); URL.revokeObjectURL(a.href);
+});
+
+$("#resetBtn").addEventListener("click", async () => {
+  if(!confirm("Discard your edits and reload the sample listings?")) return;
+  ALL = await Store.properties.reset();
+  render(); toast("Reset to sample data");
+});
+
+document.addEventListener("keydown", e => {
+  if(e.key !== "Escape") return;
+  if($("#publishModal").classList.contains("on")) return closePublish();
+  if($("#editor").classList.contains("on") || $("#rvEditor").classList.contains("on")) return closePanels();
+});
+
+/* ---------- boot ---------- */
+(async () => {
+  $("#storeLabel").textContent = Store.label;
+  [ALL, REVIEWS, SITE] = await Promise.all([Store.properties.list(), Store.reviews.list(), Store.site.get()]);
+  const uniq = k => [...new Set(ALL.map(p => p[k]).filter(Boolean))].sort();
+  $("#localities").innerHTML     = uniq("locality").map(v => `<option value="${esc(v)}">`).join("");
+  $("#parkings").innerHTML       = uniq("parking").map(v => `<option value="${esc(v)}">`).join("");
+  $("#availabilities").innerHTML = uniq("availableFrom").map(v => `<option value="${esc(v)}">`).join("");
+  render();
+  renderReviews();
+})();
+</script>
+</body>
+</html>

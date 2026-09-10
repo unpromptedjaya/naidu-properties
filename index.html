@@ -144,6 +144,34 @@ section.band.mid{border-top:0;padding-top:52px}
 .review .av{width:34px;height:34px;flex:none;border-radius:50%;background:#E0E9CF;color:var(--forest);display:grid;place-items:center;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:.95rem}
 @media(max-width:860px){.reviews,.reviews.two{grid-template-columns:1fr;gap:26px}}
 .rev-meta{font-size:.88rem;color:var(--ink-faint);margin:26px 0 0}
+/* write a review */
+.writerev{margin-top:22px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.writerev button{font:inherit;font-size:.9rem;font-weight:600;background:none;border:1px solid var(--forest);color:var(--forest);border-radius:6px;padding:9px 16px;cursor:pointer;transition:background .15s,color .15s}
+.writerev button:hover{background:var(--forest);color:#F1F0EA}
+.writerev span{font-size:.84rem;color:var(--ink-faint)}
+.rv-scrim{position:fixed;inset:0;z-index:96;background:rgba(12,33,28,.6);opacity:0;pointer-events:none;transition:opacity .22s}
+.rv-scrim.on{opacity:1;pointer-events:auto}
+.rv-modal{position:fixed;z-index:97;left:50%;top:50%;transform:translate(-50%,-46%) scale(.98);opacity:0;pointer-events:none;
+  width:min(520px,calc(100vw - 32px));max-height:88vh;overflow-y:auto;background:var(--paper);border-radius:14px;padding:26px;
+  box-shadow:0 24px 70px rgba(12,33,28,.34);transition:opacity .2s,transform .2s}
+.rv-modal.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.rv-modal h3{font-size:1.5rem;margin-bottom:6px}
+.rv-modal .sub{font-size:.9rem;color:var(--ink-soft);margin:0 0 18px}
+.rv-modal .f{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.rv-modal label{font-size:.8rem;color:var(--ink-soft)}
+.rv-modal input,.rv-modal textarea{font:inherit;font-size:.95rem;padding:10px 12px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--ink);width:100%}
+.rv-modal textarea{min-height:104px;resize:vertical;line-height:1.5}
+.rv-modal input:focus,.rv-modal textarea:focus{border-color:var(--forest);outline:none}
+.rv-modal .rate{display:flex;gap:3px}
+.rv-modal .rate button{font-size:1.7rem;line-height:1;background:none;border:0;cursor:pointer;color:var(--line);padding:0 3px}
+.rv-modal .rate button.on{color:var(--ochre)}
+.rv-modal .acts{display:flex;gap:10px;align-items:center;margin-top:20px}
+.rv-modal .send{font:inherit;font-size:.94rem;font-weight:600;background:var(--forest);color:#fff;border:0;border-radius:6px;padding:11px 20px;cursor:pointer}
+.rv-modal .send:hover{background:var(--forest-2)}
+.rv-modal .cancel{font:inherit;font-size:.9rem;background:none;border:0;color:var(--ink-soft);text-decoration:underline;cursor:pointer}
+.rv-modal .note{font-size:.78rem;color:var(--ink-faint);margin:14px 0 0}
+.rv-modal .bad input,.rv-modal .bad textarea{border-color:var(--seal)}
+@media(max-width:520px){.rv-modal{padding:20px}}
 
 /* ---------- listings ---------- */
 .filters{display:flex;flex-wrap:wrap;gap:13px 16px;align-items:flex-end;padding:18px;background:var(--paper-2);border:1px solid var(--line);border-radius:8px;margin-bottom:14px}
@@ -336,11 +364,11 @@ footer a:hover{color:var(--forest)}
 <nav class="panel" id="panel" aria-label="Main">
   <div class="wrap">
     <a href="#home">Home</a>
-    <a href="#rent">Rent <em>Available now</em></a>
-    <a href="#buy">Buy <em>Title checked</em></a>
-    <a href="#management">Property management <em>End to end</em></a>
-    <a href="#services">Paperwork <em>Khata, registration, EC</em></a>
-    <a href="#contact">Contact <em>Talk to Ravi</em></a>
+    <a href="#rent">Rent</a>
+    <a href="#buy">Buy</a>
+    <a href="#management">Property management</a>
+    <a href="#services">Paperwork</a>
+    <a href="#contact">Contact</a>
   </div>
 </nav>
 
@@ -657,6 +685,26 @@ footer a:hover{color:var(--forest)}
     </div>
   </div>
 </footer>
+
+
+<div class="rv-scrim" id="rvScrim"></div>
+<div class="rv-modal" id="rvModal" role="dialog" aria-modal="true" aria-labelledby="rvHead">
+  <h3 id="rvHead">Write a review</h3>
+  <p class="sub">A line or two about how it went. Ravi reads every one before it goes up.</p>
+  <form id="rvForm" novalidate>
+    <div class="f"><label>Your rating</label><div class="rate" id="rvRate" role="group" aria-label="Star rating"></div></div>
+    <div class="f"><label for="rv-text">What happened</label>
+      <textarea id="rv-text" placeholder="He showed us four flats in one evening, all of them actually vacant."></textarea></div>
+    <div class="f"><label for="rv-name">Your name</label><input id="rv-name" placeholder="Sridhar M."></div>
+    <div class="f"><label for="rv-detail">Where and what (optional)</label>
+      <input id="rv-detail" placeholder="Owner, 3 BHK in Whitefield"></div>
+    <div class="acts">
+      <button type="submit" class="send">Send review</button>
+      <button type="button" class="cancel" id="rvCancel">Cancel</button>
+    </div>
+    <p class="note">Sends on WhatsApp so Ravi can check it is a real client before it appears on the site.</p>
+  </form>
+</div>
 
 <script>
 /* =====================================================================
@@ -1025,6 +1073,52 @@ document.getElementById("enq").addEventListener("submit",e=>{
   const text=`Hi Ravi.\nName: ${v("q-name")}\nPhone: ${v("q-phone")}\nAbout: ${v("q-need")}\n${v("q-msg")}`;
   window.open("https://wa.me/919876543210?text="+encodeURIComponent(text),"_blank","noopener");
 });
+/* write a review — until there is a backend this reaches Ravi on WhatsApp,
+   and he puts it live from the CMS. */
+(function(){
+  const scrim=document.getElementById("rvScrim"), modal=document.getElementById("rvModal");
+  const rate=document.getElementById("rvRate");
+  let stars=5;
+  const drawStars=()=>{ rate.innerHTML=[1,2,3,4,5].map(n=>
+    `<button type="button" data-star="${n}" class="${n<=stars?"on":""}" aria-label="${n} star${n>1?"s":""}">\u2605</button>`).join(""); };
+  rate.addEventListener("click",e=>{ const b=e.target.closest("[data-star]"); if(b){ stars=Number(b.dataset.star); drawStars(); } });
+
+  function open(){ drawStars(); scrim.classList.add("on"); modal.classList.add("on"); document.body.classList.add("locked");
+                   setTimeout(()=>document.getElementById("rv-text").focus(),200); }
+  function close(){ scrim.classList.remove("on"); modal.classList.remove("on"); document.body.classList.remove("locked"); }
+  scrim.addEventListener("click",close);
+  document.getElementById("rvCancel").addEventListener("click",close);
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&modal.classList.contains("on")) close(); });
+
+  /* a small invite under every set of reviews */
+  document.querySelectorAll("[data-reviews]").forEach(box=>{
+    const row=document.createElement("div");
+    row.className="writerev";
+    row.innerHTML='<button type="button">Write a review</button><span>Been through it with Ravi? Say so.</span>';
+    row.querySelector("button").addEventListener("click",open);
+    box.after(row);
+  });
+
+  /* clear the error outline as soon as they start fixing it */
+  ["rv-text","rv-name"].forEach(id=>document.getElementById(id)
+    .addEventListener("input",e=>e.target.closest(".f").classList.remove("bad")));
+
+  document.getElementById("rvForm").addEventListener("submit",e=>{
+    e.preventDefault();
+    const v=id=>document.getElementById(id).value.trim();
+    let ok=true;
+    [["rv-text"],["rv-name"]].forEach(([id])=>{
+      const f=document.getElementById(id).closest(".f");
+      const bad=!v(id); f.classList.toggle("bad",bad); if(bad) ok=false;
+    });
+    if(!ok) return;
+    const text=`New review for Naidu Properties\n${"\u2605".repeat(stars)}${"\u2606".repeat(5-stars)} (${stars}/5)\n\n${v("rv-text")}\n\n- ${v("rv-name")}${v("rv-detail")?", "+v("rv-detail"):""}`;
+    window.open("https://wa.me/919876543210?text="+encodeURIComponent(text),"_blank","noopener");
+    close();
+    document.getElementById("rvForm").reset(); stars=5;
+    modal.querySelectorAll(".f.bad").forEach(f=>f.classList.remove("bad"));
+  });
+})();
 document.getElementById("yr").textContent=new Date().getFullYear();
 </script>
 </body>

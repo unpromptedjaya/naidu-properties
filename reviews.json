@@ -1,0 +1,115 @@
+[
+  {
+    "id": "RV-101",
+    "status": "published",
+    "stars": 5,
+    "tag": [
+      "management",
+      "home"
+    ],
+    "text": "I have been in Melbourne for four years and have not once had to fly down for the flat. Rent lands on the 5th, and the inspection photos come without me asking.",
+    "name": "Sridhar M.",
+    "detail": "Owner, 3 BHK in Whitefield · Managed since 2022"
+  },
+  {
+    "id": "RV-102",
+    "status": "published",
+    "stars": 5,
+    "tag": [
+      "services",
+      "home"
+    ],
+    "text": "My khata was stuck for eight months with an agent who kept asking for more money. Ravi looked at the file, told me what was actually missing, and had the certificate in six weeks.",
+    "name": "Anitha R.",
+    "detail": "Khata transfer · Bellandur"
+  },
+  {
+    "id": "RV-103",
+    "status": "published",
+    "stars": 5,
+    "tag": [
+      "rent",
+      "home"
+    ],
+    "text": "He showed us four flats in one evening, all of them in our budget and actually vacant. Every other broker was sending us photos of flats already gone.",
+    "name": "Karthik and Divya",
+    "detail": "Tenants, 2 BHK in HSR Layout"
+  },
+  {
+    "id": "RV-104",
+    "status": "published",
+    "stars": 5,
+    "tag": [
+      "rent"
+    ],
+    "text": "Told me my asking rent was two thousand too high and why. Listed it at his number and it was let in eleven days.",
+    "name": "Prakash B.",
+    "detail": "Owner, 2 BHK in Marathahalli"
+  },
+  {
+    "id": "RV-105",
+    "status": "published",
+    "stars": 4,
+    "tag": [
+      "buy"
+    ],
+    "text": "He flagged a gap in the mother deed on the first flat we liked and told us to walk away. The second one closed clean. That one call saved us a lot of trouble.",
+    "name": "Rohit S.",
+    "detail": "Buyer, 3 BHK in Electronic City"
+  },
+  {
+    "id": "RV-106",
+    "status": "published",
+    "stars": 5,
+    "tag": [
+      "buy"
+    ],
+    "text": "Sold my father's site after he passed. Ravi handled the succession paperwork and the registration together, and explained each step to my mother in Kannada.",
+    "name": "Deepa N.",
+    "detail": "Seller, site in KR Puram"
+  },
+  {
+    "id": "RV-107",
+    "status": "published",
+    "stars": 5,
+    "tag": [
+      "management"
+    ],
+    "text": "A tenant left owing two months and damage to the kitchen. It was settled from the deposit with photographs, and the flat was re-let in three weeks.",
+    "name": "Vinod K.",
+    "detail": "Owner, 2 BHK in Bellandur"
+  },
+  {
+    "id": "RV-108",
+    "status": "published",
+    "stars": 5,
+    "tag": [
+      "management"
+    ],
+    "text": "One WhatsApp number for everything — plumber, society dues, tax receipt. I stopped keeping a list.",
+    "name": "Lakshmi V.",
+    "detail": "Owner, villa in Sarjapur Road"
+  },
+  {
+    "id": "RV-109",
+    "status": "published",
+    "stars": 5,
+    "tag": [
+      "services"
+    ],
+    "text": "BWSSB and BESCOM both still showed the builder's name three years after we bought. Both were changed in about a month.",
+    "name": "Faizal A.",
+    "detail": "Utility name transfer · Hoodi"
+  },
+  {
+    "id": "RV-110",
+    "status": "published",
+    "stars": 4,
+    "tag": [
+      "services"
+    ],
+    "text": "We were splitting a family site three ways. He told us up front it would take four months, and it did. No surprise charges at the end.",
+    "name": "Ramesh Gowda",
+    "detail": "Property bifurcation · Hennur"
+  }
+]
