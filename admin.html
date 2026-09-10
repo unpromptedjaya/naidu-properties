@@ -131,6 +131,7 @@ legend{font-size:.71rem;letter-spacing:.09em;text-transform:uppercase;color:var(
 .f textarea{min-height:110px;resize:vertical;line-height:1.5}
 .f input:focus,.f select:focus,.f textarea:focus{border-color:var(--forest)}
 .f .hint{font-size:.75rem;color:var(--ink-faint)}
+.f .newval{margin-top:6px}
 .f.bad input,.f.bad select,.f.bad textarea{border-color:var(--seal)}
 .f .err{font-size:.75rem;color:var(--seal)}
 .switch{display:flex;align-items:center;gap:11px;padding:11px 13px;background:var(--paper-2);border:1px solid var(--line);border-radius:6px}
@@ -170,6 +171,9 @@ legend{font-size:.71rem;letter-spacing:.09em;text-transform:uppercase;color:var(
 .imgcard{display:grid;grid-template-columns:240px minmax(0,1fr);gap:26px;align-items:start}
 .imgcard > *{min-width:0}
 .portrait-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+.factrow{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.factrow input{flex:1;min-width:0}
+.factrow input.num{flex:0 0 110px}
 .meta{font-size:.78rem;color:var(--ink-faint);margin:10px 0 0}
 
 /* ---------- modal + toast ---------- */
@@ -335,6 +339,30 @@ pre{background:var(--forest-2);color:#E7E6DE;padding:14px;border-radius:6px;over
     </div>
 
     <div class="card2">
+      <h3>Text beside and below the photo</h3>
+      <p>The caption under the photo, the badge on it, and the copy in the About section.</p>
+      <div class="grid">
+        <div class="f full"><label for="s-caption">Caption under the photo</label>
+          <input id="s-caption" placeholder="Ravi at the Whitefield site"></div>
+        <div class="f"><label for="s-badgeBig">Badge — big line</label>
+          <input id="s-badgeBig" placeholder="10 yrs"></div>
+        <div class="f"><label for="s-badgeSmall">Badge — small line</label>
+          <input id="s-badgeSmall" placeholder="in the field"></div>
+        <div class="f full"><label for="s-aboutTitle">Heading</label>
+          <input id="s-aboutTitle" placeholder="Ravi Kumar"></div>
+        <div class="f full"><label for="s-aboutLede">Intro paragraph</label>
+          <textarea id="s-aboutLede"></textarea></div>
+        <div class="f full"><label>The three figures</label>
+          <div id="factRows"></div>
+          <button class="btn line sm" id="addFact" type="button" style="margin-top:8px;align-self:flex-start">+ Add a figure</button></div>
+      </div>
+      <div class="portrait-actions" style="margin-top:16px">
+        <button class="btn solid" id="saveAbout" type="button">Save text</button>
+        <span class="meta" style="margin:0" id="aboutSaved"></span>
+      </div>
+    </div>
+
+    <div class="card2">
       <h3>Storage used</h3>
       <p style="margin-bottom:6px" id="quotaNote"></p>
       <div class="meter" id="quotaMeter"><i style="width:0%"></i></div>
@@ -397,7 +425,9 @@ pre{background:var(--forest-2);color:#E7E6DE;padding:14px;border-radius:6px;over
       <legend>Where and how big</legend>
       <div class="grid">
         <div class="f"><label for="f-locality">Locality</label>
-          <input id="f-locality" name="locality" placeholder="HSR Layout" list="localities"><div class="err" hidden></div></div>
+          <select id="f-locality" name="locality"></select>
+          <input id="f-locality-new" class="newval" placeholder="Name the locality" hidden>
+          <div class="err" hidden></div></div>
         <div class="f"><label for="f-area">Area or block</label>
           <input id="f-area" name="area" placeholder="Sector 2"></div>
         <div class="f"><label for="f-sqft">Built-up area (sq ft)</label>
@@ -424,7 +454,8 @@ pre{background:var(--forest-2);color:#E7E6DE;padding:14px;border-radius:6px;over
         <div class="f"><label for="f-furnish">Furnishing</label>
           <select id="f-furnish" name="furnish"></select></div>
         <div class="f"><label for="f-parking">Parking</label>
-          <input id="f-parking" name="parking" placeholder="1 covered" list="parkings"></div>
+          <select id="f-parking" name="parking"></select>
+          <input id="f-parking-new" class="newval" placeholder="Describe the parking" hidden></div>
         <div class="f sale-only"><label for="f-khata">Khata</label>
           <select id="f-khata" name="khata"></select></div>
         <div class="f sale-only"><label for="f-age">Age of property</label>
@@ -442,13 +473,11 @@ pre{background:var(--forest-2);color:#E7E6DE;padding:14px;border-radius:6px;over
             <option value="rented">Rented / sold</option>
           </select></div>
         <div class="f"><label for="f-availableFrom">Available from</label>
-          <input id="f-availableFrom" name="availableFrom" placeholder="Immediate" list="availabilities"></div>
+          <select id="f-availableFrom" name="availableFrom"></select>
+          <input id="f-availableFrom-new" class="newval" placeholder="e.g. 15 October" hidden></div>
       </div>
     </fieldset>
 
-    <datalist id="localities"></datalist>
-    <datalist id="parkings"></datalist>
-    <datalist id="availabilities"></datalist>
   </form>
   <div class="efoot">
     <button class="btn danger" id="eDelete" type="button">Delete</button>
@@ -519,10 +548,11 @@ pre{background:var(--forest-2);color:#E7E6DE;padding:14px;border-radius:6px;over
       <div class="tabs" id="pubTabs" style="margin-bottom:14px">
         <button data-pub="properties" aria-pressed="true">Listings</button>
         <button data-pub="reviews" aria-pressed="false">Reviews</button>
+        <button data-pub="site" aria-pressed="false">About &amp; photo</button>
       </div>
       <ol class="steps">
         <li>Copy the block below.</li>
-        <li>In <code>index.html</code>, replace everything from <code id="pubMarker">const PROPERTIES = [</code> to its closing <code>];</code>.</li>
+        <li>In <code>index.html</code>, replace everything from <code id="pubMarker">const PROPERTIES = [</code> to its closing <code id="pubClose">];</code>.</li>
         <li>Commit and push — the site rebuilds in about a minute.</li>
       </ol>
       <pre id="pubCode"></pre>
@@ -595,7 +625,13 @@ const Store = (() => {
     properties: collection(K.properties, "properties.json"),
     reviews: collection(K.reviews, "reviews.json"),
     site: {
-      async get(){ return read(K.site, {}); },
+      async get(){
+        const cached = read(K.site, null);
+        if(cached) return cached;
+        const s = await seed("site.json");
+        if(s && !Array.isArray(s) && Object.keys(s).length) write(K.site, s);
+        return s && !Array.isArray(s) ? s : {};
+      },
       async set(patch){
         const next = {...read(K.site, {}), ...patch};
         write(K.site, next);
@@ -635,6 +671,29 @@ const big = n => n >= 10000000
   : "₹" + (n/100000).toFixed(1).replace(/\.0$/,"") + " L";
 const priceOf = p => p.deal === "sale" ? big(p.price) : inr(p.price);
 const kb = b => b > 1048576 ? (b/1048576).toFixed(1) + " MB" : Math.round(b/1024) + " KB";
+
+/* A select that still lets you type something new — a datalist looked broken
+   because it shows no arrow and stays empty until you type. */
+function fillCombo(id, values, current){
+  const sel = $("#" + id), extra = $("#" + id + "-new");
+  const all = [...new Set([...values, current].filter(Boolean))].sort((a,b) => a.localeCompare(b));
+  sel.innerHTML = all.map(v => `<option value="${esc(v)}"${v === current ? " selected" : ""}>${esc(v)}</option>`).join("")
+    + `<option value="__new">+ Something else…</option>`;
+  if(current) sel.value = current;
+  extra.hidden = true; extra.value = "";
+}
+function comboValue(id){
+  const sel = $("#" + id);
+  return sel.value === "__new" ? $("#" + id + "-new").value.trim() : sel.value;
+}
+$$(".newval").forEach(inp => {
+  const sel = $("#" + inp.id.replace("-new",""));
+  sel.addEventListener("change", () => {
+    const isNew = sel.value === "__new";
+    inp.hidden = !isNew;
+    if(isNew) inp.focus();
+  });
+});
 
 function fill(sel, values, labels){
   sel.innerHTML = (Array.isArray(values) ? values : Object.keys(values))
@@ -761,10 +820,14 @@ function openEditor(p){
   $("#eId").textContent = editing ? editing.id : "ID assigned on save";
   $("#eDelete").hidden = !editing;
 
-  ["title","deal","type","config","art","locality","area","sqft","price","deposit",
-   "furnish","floor","parking","status","availableFrom","khata","age"].forEach(k => {
+  ["title","deal","type","config","art","area","sqft","price","deposit",
+   "furnish","floor","status","khata","age"].forEach(k => {
     const el = $(`#f-${k}`); if(el) el.value = d[k] ?? "";
   });
+  const uniq = k => [...new Set(ALL.map(x => x[k]).filter(Boolean))];
+  fillCombo("f-locality", uniq("locality"), d.locality);
+  fillCombo("f-parking", [...new Set([...uniq("parking"), "1 covered", "2 covered", "1 open", "Two-wheeler", "—"])], d.parking);
+  fillCombo("f-availableFrom", [...new Set([...uniq("availableFrom"), "Immediate", "Ready to move", "On tenant exit"])], d.availableFrom);
   $("#f-hidden").checked = !!d.hidden;
   editingPhotos = [...(d.photos || [])];
   renderShots();
@@ -810,14 +873,15 @@ function setError(id, msg){
 
 function readForm(){
   const get = n => { const el = $(`#f-${n}`); return el ? String(el.value).trim() : ""; };
+  const combo = n => comboValue(`f-${n}`).trim();
   const deal = get("deal");
   const p = {
     id: editing ? editing.id : nextId(deal),
     deal, title:get("title"), type:get("type"), config:get("config"),
-    locality:get("locality"), area:get("area"),
+    locality:combo("locality"), area:get("area"),
     sqft:Number(get("sqft")) || 0, price:Number(get("price")) || 0,
-    furnish:get("furnish"), floor:get("floor"), parking:get("parking") || "—",
-    status:get("status"), availableFrom:get("availableFrom") || "Immediate", art:get("art")
+    furnish:get("furnish"), floor:get("floor"), parking:combo("parking") || "—",
+    status:get("status"), availableFrom:combo("availableFrom") || "Immediate", art:get("art")
   };
   if($("#f-hidden").checked) p.hidden = true;
   if(editingPhotos.length) p.photos = [...editingPhotos];
@@ -991,6 +1055,8 @@ function refreshImages(){
   $("#portraitMeta").textContent = src ? `Custom photo · about ${kb(src.length * 2)}` : "No photo set — the site shows the outline drawing.";
   $("#portraitClear").hidden = !src;
 
+  fillAbout();
+
   const used = Store.usage ? Store.usage() : 0;
   const cap = 5 * 1024 * 1024;
   const pct = Math.min(100, Math.round(used / cap * 100));
@@ -1001,6 +1067,48 @@ function refreshImages(){
   $("#quotaNote").textContent = pct > 60
     ? "Photos live in this browser for now, and the browser caps that at about 5 MB. Connecting Supabase moves them to real storage."
     : "Photos are held in this browser while there is no backend. Connecting Supabase moves them to real storage with no practical limit.";
+}
+
+function renderFacts(){
+  const facts = SITE.facts || [];
+  $("#factRows").innerHTML = facts.map((f,i) => `
+    <div class="factrow">
+      <input class="num" data-fact="${i}" data-part="n" value="${esc(f.n)}" aria-label="Figure ${i+1}">
+      <input data-fact="${i}" data-part="l" value="${esc(f.l)}" aria-label="Label ${i+1}">
+      <button type="button" class="iconbtn del" data-drop="${i}" aria-label="Remove figure ${i+1}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg>
+      </button>
+    </div>`).join("");
+}
+
+function fillAbout(){
+  $("#s-caption").value    = SITE.caption ?? "";
+  $("#s-badgeBig").value   = SITE.badgeBig ?? "";
+  $("#s-badgeSmall").value = SITE.badgeSmall ?? "";
+  $("#s-aboutTitle").value = SITE.aboutTitle ?? "";
+  $("#s-aboutLede").value  = SITE.aboutLede ?? "";
+  renderFacts();
+}
+
+async function saveAbout(){
+  const facts = [...$("#factRows").querySelectorAll(".factrow")].map(row => ({
+    n: row.querySelector('[data-part="n"]').value.trim(),
+    l: row.querySelector('[data-part="l"]').value.trim()
+  })).filter(f => f.n || f.l);
+  try {
+    SITE = await Store.site.set({
+      caption: $("#s-caption").value.trim(),
+      badgeBig: $("#s-badgeBig").value.trim(),
+      badgeSmall: $("#s-badgeSmall").value.trim(),
+      aboutTitle: $("#s-aboutTitle").value.trim(),
+      aboutLede: $("#s-aboutLede").value.trim(),
+      facts
+    });
+  } catch(e){ toast(e.message); return; }
+  renderFacts();
+  $("#aboutSaved").textContent = "Saved";
+  setTimeout(() => { $("#aboutSaved").textContent = ""; }, 2500);
+  toast("Text saved — Publish to put it on the site");
 }
 
 async function setPortrait(file){
@@ -1044,13 +1152,29 @@ function reviewsBlock(){
   ).join(",\n") + "\n];";
 }
 
+function siteBlock(){
+  const out = {
+    portrait: SITE.portrait || "",
+    caption: SITE.caption || "",
+    badgeBig: SITE.badgeBig || "",
+    badgeSmall: SITE.badgeSmall || "",
+    aboutTitle: SITE.aboutTitle || "",
+    aboutLede: SITE.aboutLede || "",
+    facts: SITE.facts || []
+  };
+  return "const SITE = " + JSON.stringify(out, null, 2) + ";";
+}
+
 function renderPublish(){
-  const isProps = pubTab === "properties";
-  $("#pubCode").textContent = isProps ? propertiesBlock() : reviewsBlock();
-  $("#pubMarker").textContent = isProps ? "const PROPERTIES = [" : "const REVIEWS = [";
-  $("#pCount").textContent = isProps
-    ? `${ALL.filter(p => !p.hidden).length} listings published, ${ALL.filter(p => p.hidden).length} hidden`
-    : `${REVIEWS.filter(r => r.status === "published").length} reviews published`;
+  const block = {properties: propertiesBlock, reviews: reviewsBlock, site: siteBlock}[pubTab];
+  const marker = {properties:"const PROPERTIES = [", reviews:"const REVIEWS = [", site:"const SITE = {"}[pubTab];
+  $("#pubCode").textContent = block();
+  $("#pubMarker").textContent = marker;
+  $("#pubClose").textContent = pubTab === "site" ? "};" : "];";
+  $("#pCount").textContent =
+    pubTab === "properties" ? `${ALL.filter(p => !p.hidden).length} listings published, ${ALL.filter(p => p.hidden).length} hidden`
+    : pubTab === "reviews"  ? `${REVIEWS.filter(r => r.status === "published").length} reviews published`
+    : (SITE.portrait ? `includes the photo, about ${kb(SITE.portrait.length * 2)}` : "no photo set");
 }
 function openPublish(){ renderPublish(); $("#publishModal").classList.add("on"); document.body.classList.add("locked"); }
 function closePublish(){ $("#publishModal").classList.remove("on"); document.body.classList.remove("locked"); }
@@ -1150,6 +1274,19 @@ $("#rvDelete").addEventListener("click", () => {
   if(rvEditing && confirm(`Delete the review from ${rvEditing.name}?`)) deleteReview(rvEditing.id);
 });
 
+$("#saveAbout").addEventListener("click", saveAbout);
+$("#addFact").addEventListener("click", () => {
+  SITE = {...SITE, facts: [...(SITE.facts || []), {n:"", l:""}]};
+  renderFacts();
+});
+$("#factRows").addEventListener("click", e => {
+  const drop = e.target.closest("[data-drop]"); if(!drop) return;
+  const facts = [...(SITE.facts || [])];
+  facts.splice(Number(drop.dataset.drop), 1);
+  SITE = {...SITE, facts};
+  renderFacts();
+});
+
 $("#portraitPick").addEventListener("click", () => $("#portraitFile").click());
 $("#portraitFile").addEventListener("change", e => { if(e.target.files[0]) setPortrait(e.target.files[0]); e.target.value = ""; });
 const drop = $("#portraitDrop");
@@ -1175,10 +1312,10 @@ $("#pCopy").addEventListener("click", async () => {
   catch { toast("Copy failed — select the text and copy manually"); }
 });
 $("#pJson").addEventListener("click", () => {
-  const data = pubTab === "properties" ? ALL : REVIEWS;
+  const data = pubTab === "properties" ? ALL : pubTab === "reviews" ? REVIEWS : SITE;
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
   const a = Object.assign(document.createElement("a"),
-    {href:URL.createObjectURL(blob), download: pubTab === "properties" ? "properties.json" : "reviews.json"});
+    {href:URL.createObjectURL(blob), download: pubTab + ".json"});
   a.click(); URL.revokeObjectURL(a.href);
 });
 
@@ -1198,10 +1335,6 @@ document.addEventListener("keydown", e => {
 (async () => {
   $("#storeLabel").textContent = Store.label;
   [ALL, REVIEWS, SITE] = await Promise.all([Store.properties.list(), Store.reviews.list(), Store.site.get()]);
-  const uniq = k => [...new Set(ALL.map(p => p[k]).filter(Boolean))].sort();
-  $("#localities").innerHTML     = uniq("locality").map(v => `<option value="${esc(v)}">`).join("");
-  $("#parkings").innerHTML       = uniq("parking").map(v => `<option value="${esc(v)}">`).join("");
-  $("#availabilities").innerHTML = uniq("availableFrom").map(v => `<option value="${esc(v)}">`).join("");
   render();
   renderReviews();
 })();
