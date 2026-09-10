@@ -153,6 +153,18 @@ section.band.mid{border-top:0;padding-top:52px}
 .field.range{min-width:190px}.field.range input{width:100%}
 .chk{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--ink-soft);padding-bottom:9px}
 .clear{background:none;border:0;font:inherit;font-size:.88rem;color:var(--forest);text-decoration:underline;cursor:pointer;padding:0 0 10px}
+/* narrow screens: 3 compact rows — locality + available now / bhk + furnishing / slider + clear */
+@media(max-width:768px){
+  .filters{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;padding:14px}
+  .filters .field{min-width:0}
+  .filters .field select{width:100%}
+  .filters .field:nth-child(1){grid-area:1/1}
+  .filters .chk{grid-area:1/2;padding-bottom:9px}
+  .filters .field:nth-child(2){grid-area:2/1}
+  .filters .field:nth-child(3){grid-area:2/2}
+  .filters .field.range{grid-area:3/1;min-width:0}
+  .filters .clear{grid-area:3/2;justify-self:start;align-self:end}
+}
 .count{font-size:.88rem;color:var(--ink-soft);margin:0 0 18px}
 .count b{color:var(--ink)}
 .listing{display:grid;grid-template-columns:170px 1fr 190px;gap:24px;padding:20px 0;border-top:1px solid var(--line);align-items:start}
